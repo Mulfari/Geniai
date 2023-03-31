@@ -1,83 +1,119 @@
-/* Estilos generales y reset */
-* {
+/* Colores */
+:root {
+  --primary-color: #2196f3;
+  --secondary-color: #757575;
+  --background-color: #f5f5f5;
+  --text-color: #333333;
+  --button-text-color: #ffffff;
+  --button-background-color: var(--primary-color);
+  --button-hover-background-color: #0d8cf0;
+}
+
+/* Estilos para el cuerpo de la página */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Estilos del tema oscuro */
-body {
-  background-color: #1f1f1f;
-  color: #f5f5f5;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  color: #f5f5f5;
-}
-
-a {
-  color: #4aa1f7;
-  text-decoration: none;
-}
-
-a:hover {
-  color: #3a8fe1;
-}
-
-button {
-  background-color: #4aa1f7;
-  color: #ffffff;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: #3a8fe1;
-}
-
-button:focus {
-  outline: none;
-}
-
-input, textarea, select {
-  background-color: #2e2e2e;
-  color: #f5f5f5;
-  border: 1px solid #3a3a3a;
-  border-radius: 4px;
-  padding: 10px;
-}
-
-input:focus, textarea:focus, select:focus {
-  outline: none;
-  border-color: #4aa1f7;
-}
-
-/* Contenedor principal */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
+/* Encabezado */
+header {
+  background-color: var(--primary-color);
+  color: var(--button-text-color);
+  display: flex;
+  align-items: center;
   padding: 20px;
 }
 
-/* Espaciado y alineación de elementos */
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
+header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
 }
 
-.column {
-  flex: 1;
+/* Botón */
+button {
+  background-color: var(--button-background-color);
+  color: var(--button-text-color);
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: var(--button-hover-background-color);
+}
+
+/* Formulario */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+form label {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+form input[type='file'] {
   padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
-.center {
+form button[type='submit'] {
+  margin-top: 20px;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 10px 20px;
+}
+
+/* Resultado */
+.result {
+  margin: 20px;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
 }
 
+.result img {
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+.result p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.result a {
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.result a:hover {
+  color: var(--secondary-color);
+}

@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import NewImage from './components/NewImage';
-import ModifyImageForm from './components/ModifyImageForm'
-import './App.css'
+import ModifyImageForm from './components/ModifyImageForm';
+import HomePage from './components/HomePage';
+import './App.css';
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
@@ -19,6 +20,7 @@ const App = () => {
 
   return (
     <div>
+      <HomePage />
       <h1>Bienvenido a nuestra aplicación</h1>
       <button onClick={handleNewImage}>Nueva imagen</button>
       <button onClick={handleModifyImage}>Modificar imagen</button>
@@ -28,5 +30,4 @@ const App = () => {
   );
 };
 
-
-export default App
+export default App;

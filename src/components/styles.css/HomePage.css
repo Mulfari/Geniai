@@ -1,0 +1,23 @@
+.home-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #5C258D, #4389A2);
+  color: #FFFFFF;
+}
+
+.home-page-content {
+  text-align: center;
+  max-width: 800px;
+}
+
+.home-page-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.home-page-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
