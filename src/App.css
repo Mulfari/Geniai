@@ -1,42 +1,83 @@
-#root {
-  max-width: 1280px;
+/* Estilos generales y reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos del tema oscuro */
+body {
+  background-color: #1f1f1f;
+  color: #f5f5f5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #f5f5f5;
+}
+
+a {
+  color: #4aa1f7;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #3a8fe1;
+}
+
+button {
+  background-color: #4aa1f7;
+  color: #ffffff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #3a8fe1;
+}
+
+button:focus {
+  outline: none;
+}
+
+input, textarea, select {
+  background-color: #2e2e2e;
+  color: #f5f5f5;
+  border: 1px solid #3a3a3a;
+  border-radius: 4px;
+  padding: 10px;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: #4aa1f7;
+}
+
+/* Contenedor principal */
+.container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 20px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Espaciado y alineación de elementos */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.column {
+  flex: 1;
+  padding: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
