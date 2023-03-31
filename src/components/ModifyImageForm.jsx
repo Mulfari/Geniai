@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const ImageModifier = () => {
+const ModifyImageForm = () => {
   const [description, setDescription] = useState('');
   const [originalImage, setOriginalImage] = useState(null);
   const [modifiedImage, setModifiedImage] = useState(null);
