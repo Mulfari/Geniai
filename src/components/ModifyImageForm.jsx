@@ -28,26 +28,37 @@ const ModifyImageForm = () => {
         const base64Image = reader.result.split(',')[1];
 
         // Utiliza Clarifai API para extraer etiquetas de la imagen
-        const clarifaiResponse = await axios.post(
-          'https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs',
-          {
-            inputs: [
+        const clarifaiResponse = async (base64Image) => {
+          try {
+            const response = await axios.post(
+              "https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs",
               {
-                data: {
-                  image: {
-                    base64: base64Image,
+                inputs: [
+                  {
+                    data: {
+                      image: {
+                        base64: base64Image,
+                      },
+                    },
                   },
-                },
+                ],
               },
-            ],
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Key ${clarifaiApiKey}`,
-            },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Key ${process.env.REACT_APP_CLARIFAI_API_KEY}`,
+                },
+              }
+            );
+        
+            const concepts = response.data.outputs[0].data.concepts;
+            const descriptions = concepts.map((concept) => concept.name);
+            setDescription(descriptions.join(", "));
+          } catch (error) {
+            console.error("Error al obtener la descripción de la imagen:", error);
           }
-        );
+        };
+        
 
         const labels = clarifaiResponse.data.outputs[0].data.concepts
           .map((concept) => concept.name)
