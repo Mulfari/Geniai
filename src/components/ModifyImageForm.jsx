@@ -51,13 +51,18 @@ const ModifyImageForm = () => {
               }
             );
         
-            const concepts = response.data.outputs[0].data.concepts;
-            const descriptions = concepts.map((concept) => concept.name);
-            setDescription(descriptions.join(", "));
+            if (response.data && response.data.outputs) {
+              const concepts = response.data.outputs[0].data.concepts;
+              const descriptions = concepts.map((concept) => concept.name);
+              setDescription(descriptions.join(", "));
+            } else {
+              console.error("No se encontraron 'outputs' en la respuesta de la API de Clarifai");
+            }
           } catch (error) {
             console.error("Error al obtener la descripción de la imagen:", error);
           }
         };
+        
         
 
         const labels = clarifaiResponse.data.outputs[0].data.concepts
