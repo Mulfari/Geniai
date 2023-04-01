@@ -32,8 +32,11 @@ const ModifyImageForm = () => {
           try {
             const response = await app.models.predict(Clarifai.GENERAL_MODEL, {base64: imageData});
             
-            console.log("Respuesta completa de Clarifai API:", response); // Mueve esta línea aquí
+            console.log("Respuesta completa de Clarifai API:", response);
         
+            // Agrega un registro de consola aquí
+            console.log("Antes de verificar si 'response' y 'response.outputs' existen");
+            
             if (response && response.outputs) {
               const concepts = response.outputs[0].data.concepts;
               const descriptions = concepts.map((concept) => concept.name);
