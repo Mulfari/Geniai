@@ -1,112 +1,80 @@
-import { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import { Form, Button, Image, InputGroup } from "react-bootstrap";
+import Clarifai from "clarifai";
 
 const ModifyImageForm = () => {
-  const [imageFile, setImageFile] = useState(null);
-  const [description, setDescription] = useState('');
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleImageChange = (e) => {
-    setImageFile(e.target.files[0]);
+  const API_KEY = "<your_clarifai_api_key>";
+  const MODEL_ID = "c0c0ac362b03416da06ab3fa36fb58e3";
+
+  const clarifai = new Clarifai.App({ apiKey: API_KEY });
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const getImageDescription = async (e) => {
-    e.preventDefault();
-
-    // Asegúrate de agregar tus credenciales de API correctas
-    const clarifaiApiKey = 'a270745c80654ce085dc1b12c1415227';
-    const openaiApiKey = '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';
-
-    // Crear un objeto FormData para enviar la imagen
-    const formData = new FormData();
-    formData.append('image', imageFile);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!file) return;
 
     try {
-      // Convierte la imagen a base64
-      const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
-      reader.onloadend = async () => {
-        const base64Image = reader.result.split(',')[1];
+      const base64 = await toBase64(file);
+      const response = await clarifai.models.predict(MODEL_ID, { base64 });
 
-        // Utiliza Clarifai API para extraer etiquetas de la imagen
-        const clarifaiResponse = async (imageData) => {
-          try {
-            const response = await app.models.predict(Clarifai.GENERAL_MODEL, {base64: imageData});
-            
-            console.log("Respuesta completa de Clarifai API:", response);
-        
-            // Agrega un registro de consola aquí
-            console.log("Antes de verificar si 'response' y 'response.outputs' existen");
-            
-            if (response && response.outputs) {
-              const concepts = response.outputs[0].data.concepts;
-              const descriptions = concepts.map((concept) => concept.name);
-              setDescription(descriptions.join(", "));
-            } else {
-              console.error("No se encontraron 'outputs' en la respuesta de la API de Clarifai");
-            }
-          } catch (error) {
-            console.error("Error al obtener la descripción de la imagen:", error);
-          }
-        };
-        
-        
-        
-        
-        
+      const descriptions = response.outputs[0].data.concepts.map(
+        (concept) => concept.name
+      );
 
-        const labels = clarifaiResponse.data.outputs[0].data.concepts
-          .map((concept) => concept.name)
-          .join(', ');
-
-        // Utiliza OpenAI API para generar una descripción basada en las etiquetas de la imagen
-        const openaiResponse = await axios.post(
-          'https://api.openai.com/v1/engines/davinci-codex/completions',
-          {
-            prompt: `Describe una imagen que contiene ${labels}:`,
-            max_tokens: 50,
-            n: 1,
-            stop: null,
-            temperature: 0.7,
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${openaiApiKey}`,
-            },
-          }
-        );
-
-        setDescription(openaiResponse.data.choices[0].text.trim());
-      };
+      setDescription(descriptions.join(", "));
     } catch (error) {
-      console.error('Error al obtener la descripción de la imagen:',error);
+      console.error(error);
     }
-    };
-    
-    return (
-    <div>
-    <h2>Modificar imagen</h2>
-    <form onSubmit={getImageDescription}>
-    <div>
-    <label htmlFor="image">Cargar imagen:</label>
-    <input
+  };
+
+  const toBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+
+  return (
+    <Form onSubmit={handleSubmit}>
+      <Form.Group controlId="imageUpload">
+        <Form.Label>Upload Image</Form.Label>
+        <Form.Control
           type="file"
-          name="image"
-          id="image"
           accept="image/*"
           onChange={handleImageChange}
         />
-    </div>
-    <button type="submit">Obtener descripción</button>
-    </form>
-    {description && (
-    <div>
-    <h3>Descripción de la imagen:</h3>
-    <p>{description}</p>
-    </div>
-    )}
-    </div>
-    );
-    };
-    
-    export default ModifyImageForm;
+      </Form.Group>
+      {preview && <Image src={preview} thumbnail />}
+      <Form.Group controlId="imageDescription">
+        <Form.Label>Image Description</Form.Label>
+        <InputGroup>
+          <Form.Control
+            type="text"
+            value={description}
+            readOnly
+          />
+        </InputGroup>
+      </Form.Group>
+      <Button type="submit" className="mt-3">
+        Get Description
+      </Button>
+    </Form>
+  );
+};
+
+export default ModifyImageForm;
