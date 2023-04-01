@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import Clarifai from "clarifai";
-import styles from "./ModifyImageForm.module.css";
+import "../styles.css/ModifyImageForm.css";
+
 
 const app = new Clarifai.App({
   apiKey: "a270745c80654ce085dc1b12c1415227",
