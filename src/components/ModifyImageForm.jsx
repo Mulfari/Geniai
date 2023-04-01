@@ -29,7 +29,7 @@ const ModifyImageForm = () => {
 
         // Utiliza Clarifai API para extraer etiquetas de la imagen
         const clarifaiResponse = await axios.post(
-          'https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/output',
+          'https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs',
           {
             inputs: [
               {
