@@ -1,16 +1,10 @@
-import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import Clarifai from "clarifai";
-import "../styles.css/ModifyImageForm.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import './styles.css';
 
-
-const app = new Clarifai.App({
-  apiKey: "a270745c80654ce085dc1b12c1415227",
-});
-
-const ModifyImageForm = () => {
-  const [imageDataUrl, setImageDataUrl] = useState("");
-  const [description, setDescription] = useState("");
+const ImageDescriptionForm = () => {
+  const [image, setImage] = useState(null);
+  const [description, setDescription] = useState('');
 
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -20,48 +14,41 @@ const ModifyImageForm = () => {
       reader.onerror = (error) => reject(error);
     });
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (event) => {
+    event.preventDefault();
+    if (!image) return;
 
     try {
-      const response = await app.models.predict(
-        Clarifai.GENERAL_MODEL,
-        { base64: imageDataUrl.split(",")[1] }
+      const base64Image = await toBase64(image);
+      const clarifaiApiKey = 'a270745c80654ce085dc1b12c1415227';
+      const response = await axios.post(
+        'https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs',
+        { inputs: [{ data: { image: { base64: base64Image.split(',')[1] } } }] },
+        { headers: { 'Authorization': `Key ${clarifaiApiKey}` } }
       );
 
-      const descriptions = response.outputs[0].data.concepts.map(
-        (concept) => concept.name
-      );
-      setDescription(descriptions.join(", "));
+      const descriptions = response.data.outputs[0].data.concepts.map((concept) => concept.name);
+      setDescription(descriptions.join(', '));
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error fetching image description:', error);
     }
   };
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImageDataUrl(await toBase64(file));
-  };
-
   return (
-    <Form onSubmit={onSubmit}>
-      <Form.Group controlId="formFile">
-        <Form.Label>Upload Image</Form.Label>
-        <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
-      </Form.Group>
-      {imageDataUrl && <img src={imageDataUrl} alt="Preview" className={styles.imagePreview} />}
-      <Button type="submit" className="mt-3">
-        Get Description
-      </Button>
-      {description && (
-        <div className="mt-3">
-          <h4>Description</h4>
-          <p>{description}</p>
+    <div className="image-description-form">
+      <form onSubmit={onSubmit}>
+        <div className="input-container">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(event) => setImage(event.target.files[0])}
+          />
         </div>
-      )}
-    </Form>
+        <button type="submit">Obtener descripción</button>
+      </form>
+      {description && <div className="image-description">{description}</div>}
+    </div>
   );
 };
 
-export default ModifyImageForm;
+export default ImageDescriptionForm;
