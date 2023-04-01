@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { Button, Form } from "react-bootstrap";
-import Clarifai from "clarifai";
+import { Form, Button } from "react-bootstrap";
+import { Clarifai } from "clarifai";
+import styles from "./ModifyImageForm.module.css";
 
 const app = new Clarifai.App({
-  apiKey: import.meta.env.VITE_CLARIFAI_API_KEY,
+  apiKey: "a270745c80654ce085dc1b12c1415227",
 });
 
-
 const ModifyImageForm = () => {
+  const [imageDataUrl, setImageDataUrl] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(null);
 
   const toBase64 = (file) =>
     new Promise((resolve, reject) => {
@@ -21,38 +21,45 @@ const ModifyImageForm = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!image) return;
 
-    const base64Image = await toBase64(image);
+    try {
+      const response = await app.models.predict(
+        Clarifai.GENERAL_MODEL,
+        { base64: imageDataUrl.split(",")[1] }
+      );
 
-    app.models
-      .predict(Clarifai.GENERAL_MODEL, { base64: base64Image.split(",")[1] })
-      .then((response) => {
-        const concepts = response.outputs[0].data.concepts;
-        const descriptions = concepts.map((concept) => concept.name);
-        setDescription(descriptions.join(", "));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      const descriptions = response.outputs[0].data.concepts.map(
+        (concept) => concept.name
+      );
+      setDescription(descriptions.join(", "));
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImageDataUrl(await toBase64(file));
   };
 
   return (
-    <div>
-      <Form onSubmit={onSubmit}>
-        <Form.Group controlId="formImageFile">
-          <Form.Label>Upload Image</Form.Label>
-          <Form.Control
-            type="file"
-            onChange={(e) => setImage(e.target.files[0])}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Get Description
-        </Button>
-      </Form>
-      {description && <p>{description}</p>}
-    </div>
+    <Form onSubmit={onSubmit}>
+      <Form.Group controlId="formFile">
+        <Form.Label>Upload Image</Form.Label>
+        <Form.Control type="file" accept="image/*" onChange={handleFileChange} />
+      </Form.Group>
+      {imageDataUrl && <img src={imageDataUrl} alt="Preview" className={styles.imagePreview} />}
+      <Button type="submit" className="mt-3">
+        Get Description
+      </Button>
+      {description && (
+        <div className="mt-3">
+          <h4>Description</h4>
+          <p>{description}</p>
+        </div>
+      )}
+    </Form>
   );
 };
 
