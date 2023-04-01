@@ -31,7 +31,8 @@ const ModifyImageForm = () => {
         const clarifaiResponse = async (imageData) => {
           try {
             const response = await app.models.predict(Clarifai.GENERAL_MODEL, {base64: imageData});
-            console.log("Respuesta completa de Clarifai API:", response); // Añade esta línea
+            
+            console.log("Respuesta completa de Clarifai API:", response); // Mueve esta línea aquí
         
             if (response && response.outputs) {
               const concepts = response.outputs[0].data.concepts;
@@ -44,6 +45,7 @@ const ModifyImageForm = () => {
             console.error("Error al obtener la descripción de la imagen:", error);
           }
         };
+        
         
         
         
