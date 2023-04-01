@@ -51,6 +51,8 @@ const ModifyImageForm = () => {
               }
             );
         
+            console.log("Respuesta de la API de Clarifai:", response.data);
+        
             if (response.data && response.data.outputs) {
               const concepts = response.data.outputs[0].data.concepts;
               const descriptions = concepts.map((concept) => concept.name);
@@ -62,6 +64,7 @@ const ModifyImageForm = () => {
             console.error("Error al obtener la descripción de la imagen:", error);
           }
         };
+        
         
         
 
