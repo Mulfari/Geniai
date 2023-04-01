@@ -1,79 +1,57 @@
 import React, { useState } from "react";
-import { Form, Button, Image, InputGroup } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
 import Clarifai from "clarifai";
 
+const app = new Clarifai.App({
+  apiKey: "a270745c80654ce085dc1b12c1415227",
+});
+
 const ModifyImageForm = () => {
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
 
-  const API_KEY = "<your_clarifai_api_key>";
-  const MODEL_ID = "c0c0ac362b03416da06ab3fa36fb58e3";
-
-  const clarifai = new Clarifai.App({ apiKey: API_KEY });
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setFile(file);
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result);
-      };
       reader.readAsDataURL(file);
-    }
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    if (!image) return;
+
+    const base64Image = await toBase64(image);
+
+    app.models
+      .predict(Clarifai.GENERAL_MODEL, { base64: base64Image.split(",")[1] })
+      .then((response) => {
+        const concepts = response.outputs[0].data.concepts;
+        const descriptions = concepts.map((concept) => concept.name);
+        setDescription(descriptions.join(", "));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!file) return;
-
-    try {
-      const base64 = await toBase64(file);
-      const response = await clarifai.models.predict(MODEL_ID, { base64 });
-
-      const descriptions = response.outputs[0].data.concepts.map(
-        (concept) => concept.name
-      );
-
-      setDescription(descriptions.join(", "));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const toBase64 = (file) => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(",")[1]);
-    reader.onerror = (error) => reject(error);
-    reader.readAsDataURL(file);
-  });
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group controlId="imageUpload">
-        <Form.Label>Upload Image</Form.Label>
-        <Form.Control
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-        />
-      </Form.Group>
-      {preview && <Image src={preview} thumbnail />}
-      <Form.Group controlId="imageDescription">
-        <Form.Label>Image Description</Form.Label>
-        <InputGroup>
+    <div>
+      <Form onSubmit={onSubmit}>
+        <Form.Group controlId="formImageFile">
+          <Form.Label>Upload Image</Form.Label>
           <Form.Control
-            type="text"
-            value={description}
-            readOnly
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
           />
-        </InputGroup>
-      </Form.Group>
-      <Button type="submit" className="mt-3">
-        Get Description
-      </Button>
-    </Form>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Get Description
+        </Button>
+      </Form>
+      {description && <p>{description}</p>}
+    </div>
   );
 };
 
