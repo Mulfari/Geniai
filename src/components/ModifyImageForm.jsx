@@ -3,8 +3,9 @@ import { Button, Form } from "react-bootstrap";
 import Clarifai from "clarifai";
 
 const app = new Clarifai.App({
-  apiKey: "a270745c80654ce085dc1b12c1415227",
+  apiKey: import.meta.env.VITE_CLARIFAI_API_KEY,
 });
+
 
 const ModifyImageForm = () => {
   const [description, setDescription] = useState("");
