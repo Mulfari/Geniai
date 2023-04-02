@@ -9,7 +9,7 @@ const Gpt3Chat = () => {
   const sendMessageToGPT3 = async (message) => {
     try {
       const response = await axios.post(
-        "https://api.openai.com/v1/engines/davinci-codex/completions",
+        "https://api.openai.com/v1/chat/completions",
         {
           prompt: `User: ${message}\nAI:`,
           max_tokens: 150,
