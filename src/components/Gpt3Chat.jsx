@@ -2,8 +2,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const apiKey = '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';
-
 const Gpt3Chat = () => {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
@@ -37,8 +35,7 @@ const Gpt3Chat = () => {
     }
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = (event) => {    event.preventDefault();
     getGPT3Response();
   };
 
