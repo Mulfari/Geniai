@@ -1,65 +1,67 @@
 // Gpt3Chat.js
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
+
+const apiKey = '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';
 
 const Gpt3Chat = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState("");
+  const [prompt, setPrompt] = useState('');
+  const [response, setResponse] = useState('');
 
-  const sendMessageToGPT3 = async (message) => {
-    try {
-      const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
+  const getGPT3Response = async () => {
+    const data = {
+      'messages': [
         {
-          messages: [
-            { role: "system", content: "You are a helpful assistant." },
-            { role: "user", content: message },
-          ],
-          max_tokens: 150,
+          'role': 'system',
+          'content': 'You are a helpful assistant.'
         },
         {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
-          },
+          'role': 'user',
+          'content': prompt
         }
-      );
+      ],
+    };
 
-      const gpt3Reply = response.data.choices[0].message.content.trim();
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: message, sender: "user" },
-        { text: gpt3Reply, sender: "gpt3" },
-      ]);
+    try {
+      const result = await axios.post('https://api.openai.com/v1/chat/completions', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+      });
+
+      setResponse(result.data.choices[0].message.content);
     } catch (error) {
-      console.error("Error sending message to GPT-3:", error);
+      console.error('Error calling GPT-3 API:', error);
+      alert('Error al obtener respuesta de GPT-3. Verifica la consola para más detalles.');
     }
   };
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    sendMessageToGPT3(inputMessage);
-    setInputMessage("");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    getGPT3Response();
   };
 
   return (
     <div>
-      <div>
-        {messages.map((message, index) => (
-          <p key={index}>
-            <strong>{message.sender === "user" ? "You: " : "GPT-3: "}</strong>
-            {message.text}
-          </p>
-        ))}
-      </div>
-      <form onSubmit={handleFormSubmit}>
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-        />
-        <button type="submit">Send</button>
+      <h2>OpenAI Chat Component</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Prompt:
+          <input
+            type="text"
+            value={prompt}
+            onChange={(event) => setPrompt(event.target.value)}
+          />
+        </label>
+        <button type="submit">Enviar</button>
       </form>
+      {response && (
+        <div>
+          <h3>Respuesta:</h3>
+          <p>{response}</p>
+        </div>
+      )}
     </div>
   );
 };
