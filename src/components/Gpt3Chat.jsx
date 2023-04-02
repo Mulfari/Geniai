@@ -12,10 +12,10 @@ const Gpt3Chat = () => {
         "https://api.openai.com/v1/chat/completions",
         {
           messages: [
-            { role: "system", content: "You are chatting with GPT-3." },
-            ...messages.map((msg) => ({ role: msg.sender, content: msg.text })),
+            { role: "system", content: "You are a helpful assistant." },
             { role: "user", content: message },
           ],
+          max_tokens: 150,
         },
         {
           headers: {
@@ -25,7 +25,7 @@ const Gpt3Chat = () => {
         }
       );
 
-      const gpt3Reply = response.data.choices[0].message.content;
+      const gpt3Reply = response.data.choices[0].message.content.trim();
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: message, sender: "user" },
