@@ -4,8 +4,8 @@ import ModifyImageForm from './components/ModifyImageForm';
 import HomePage from './components/HomePage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer'
-import Gpt3Chat from './components/Gpt3Chat'
 import './App.css';
+import TestApiKey from './components/TestApiKey';
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
@@ -30,7 +30,7 @@ const App = () => {
       <button onClick={handleModifyImage}>Modificar imagen</button>
       {newImage && <NewImage />}
       {modifyImage && <ModifyImageForm />}
-      <Gpt3Chat />
+      <TestApiKey />
       <Footer />
     </div>
   );
