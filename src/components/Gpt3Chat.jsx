@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+
 const Gpt3Chat = () => {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
