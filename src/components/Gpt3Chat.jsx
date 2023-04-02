@@ -1,67 +1,65 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+// Gpt3Chat.js
+import React, { useState } from "react";
+import axios from "axios";
 
 const Gpt3Chat = () => {
   const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [inputMessage, setInputMessage] = useState("");
 
-  const apiKey = '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';
-
-  const sendMessage = async () => {
-    if (inputMessage.trim() === '') return;
-
-    setMessages([...messages, { type: 'user', text: inputMessage }]);
-    setInputMessage('');
-
+  const sendMessageToGPT3 = async (message) => {
     try {
       const response = await axios.post(
-        'https://api.openai.com/v1/engines/davinci-codex/completions',
+        "https://api.openai.com/v1/engines/davinci-codex/completions",
         {
-          prompt: `${messages.map((msg) => msg.text).join('\n')}\n${inputMessage}\n`,
-          max_tokens: 100,
+          prompt: `User: ${message}\nAI:`,
+          max_tokens: 150,
           n: 1,
           stop: null,
-          temperature: 0.8,
+          temperature: 1,
         },
         {
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+            Authorization: "Bearer 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",
           },
         }
       );
 
       const gpt3Reply = response.data.choices[0].text.trim();
-      setMessages([...messages, { type: 'gpt3', text: gpt3Reply }]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, sender: "user" },
+        { text: gpt3Reply, sender: "gpt3" },
+      ]);
     } catch (error) {
-      console.error('Error sending message to GPT-3:', error);
+      console.error("Error sending message to GPT-3:", error);
     }
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      sendMessage();
-    }
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    sendMessageToGPT3(inputMessage);
+    setInputMessage("");
   };
 
   return (
     <div>
       <div>
         {messages.map((message, index) => (
-          <div key={index} className={`message ${message.type}`}>
+          <p key={index}>
+            <strong>{message.sender === "user" ? "You: " : "GPT-3: "}</strong>
             {message.text}
-          </div>
+          </p>
         ))}
       </div>
-      <div>
+      <form onSubmit={handleFormSubmit}>
         <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          onKeyPress={handleKeyPress}
         />
-        <button onClick={sendMessage}>Enviar</button>
-      </div>
+        <button type="submit">Send</button>
+      </form>
     </div>
   );
 };
