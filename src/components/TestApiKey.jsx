@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 const TestApiKey = () => {
   const [response, setResponse] = useState('');
-
+  
   const testAPIKey = async () => {
     const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-
+    
     const data = {
       'messages': [
         {
@@ -24,8 +25,8 @@ const TestApiKey = () => {
       const result = await axios.post('https://api.openai.com/v1/chat/completions', data, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer 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`,
-        },
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+        },     
       });
 
       setResponse(result.data.choices[0].message.content);

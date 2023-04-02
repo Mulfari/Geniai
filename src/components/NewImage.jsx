@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
 
+const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+
 const NewImage = () => {
   const [description, setDescription] = useState('');
   const [imageSrc, setImageSrc] = useState(null);
@@ -24,8 +26,8 @@ const NewImage = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
-          },
+            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+          },     
         }
       );
 
