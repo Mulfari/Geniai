@@ -55,7 +55,7 @@ const NewImage = () => {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer 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',
+              'Authorization': 'Bearer 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',
             },
           }
         );
