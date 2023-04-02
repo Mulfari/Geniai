@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
 
-const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
 const NewImage = () => {
   const [description, setDescription] = useState('');
   const [imageSrc, setImageSrc] = useState(null);
   const [additionalImages, setAdditionalImages] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  
   const generateImage = async () => {
     setLoading(true);
+    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
     try {
       const response = await axios.post(
