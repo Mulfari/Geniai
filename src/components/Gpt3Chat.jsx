@@ -20,7 +20,7 @@ const Gpt3Chat = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
+            'Authorization': 'Bearer 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',
           },
         }
       );
