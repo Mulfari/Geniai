@@ -24,8 +24,8 @@ const Gpt3Chat = () => {
       const result = await axios.post('https://api.openai.com/v1/chat/completions', data, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer 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`,
-        },
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+        },        
       });
 
       setResponse(result.data.choices[0].message.content);

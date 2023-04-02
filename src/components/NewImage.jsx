@@ -56,7 +56,7 @@ const NewImage = () => {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-            },            
+            },                       
           }
         );
 
