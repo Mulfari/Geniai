@@ -9,18 +9,9 @@ const Gpt3Chat = () => {
   const sendMessageToGPT3 = async (message) => {
     try {
       const response = await axios.post(
-        "https://api.openai.com/v1/chat/completions",
+        "https://api.openai.com/v1/engines/text-davinci-002/completions",
         {
-          messages: [
-            {
-              role: "user",
-              content: message
-            },
-            {
-              role: "assistant",
-              content: ""
-            }
-          ],
+          prompt: `User: ${message}\nAI:`,
           max_tokens: 150,
           n: 1,
           stop: null,
@@ -34,7 +25,7 @@ const Gpt3Chat = () => {
         }
       );
   
-      const gpt3Reply = response.data.choices[0].message.content.trim();
+      const gpt3Reply = response.data.choices[0].text.trim();
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: message, sender: "user" },
@@ -44,6 +35,7 @@ const Gpt3Chat = () => {
       console.error("Error sending message to GPT-3:", error);
     }
   };
+  
   
 
   const handleFormSubmit = (e) => {
