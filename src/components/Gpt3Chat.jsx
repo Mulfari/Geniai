@@ -19,8 +19,8 @@ const Gpt3Chat = () => {
         },
         {
           headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer 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",
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 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',
           },
         }
       );
