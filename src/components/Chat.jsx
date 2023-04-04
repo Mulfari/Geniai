@@ -10,6 +10,7 @@ const ChatComponent = () => {
     setMessages([...messages, { role: 'user', content: inputMessage }]);
 
     const data = {
+      'engine': 'davinci-codex',
       'messages': messages.concat({ role: 'user', content: inputMessage }),
       'max_tokens': 50,
     };
