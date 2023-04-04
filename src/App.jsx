@@ -31,8 +31,8 @@ const App = () => {
       <button onClick={handleModifyImage}>Modificar imagen</button>
       {newImage && <NewImage />}
       {modifyImage && <ModifyImageForm />}
-      <TestApiKey />
       <ChatComponent />
+      <TestApiKey />
       <Footer />
     </div>
   );
