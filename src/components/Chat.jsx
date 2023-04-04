@@ -15,7 +15,7 @@ const ChatComponent = () => {
     };
 
     try {
-      const response = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', {
         prompt: `chat: ${JSON.stringify(data.messages)}`,
         max_tokens: data.max_tokens,
         n: 1,
