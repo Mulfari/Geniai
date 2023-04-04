@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const DalleImageGenerator = () => {
+const ImageEditor = () => {
   const [image, setImage] = useState(null);
-  const [generatedImage, setGeneratedImage] = useState(null);
+  const [filteredImage, setFilteredImage] = useState(null);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     const base64Image = await convertToBase64(file);
     setImage(base64Image);
-    generateImage(base64Image);
+    applyFilter(base64Image);
   };
 
   const convertToBase64 = (file) => {
@@ -21,13 +21,14 @@ const DalleImageGenerator = () => {
     });
   };
 
-  const generateImage = async (base64Image) => {
+  const applyFilter = async (base64Image) => {
     const response = await axios.post(
       "https://api.openai.com/v1/images/create",
       {
-        model: "image-alpha-001",
-        data: `image/jpeg;base64,${base64Image.split("base64,")[1]}`,
-        size: "512x512",
+        prompt: "Apply a cool filter to this image:",
+        images: [base64Image.split("base64,")[1]],
+        size: [512, 512],
+        response_format: "url",
       },
       {
         headers: {
@@ -36,19 +37,8 @@ const DalleImageGenerator = () => {
         },
       }
     );
-    const jobId = response.data.id;
-    setTimeout(async () => {
-      const resultResponse = await axios.get(
-        `https://api.openai.com/v1/images/${jobId}`,
-        {
-          headers: {
-            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-          },
-        }
-      );
-      const generatedImageURL = resultResponse.data.data.url;
-      setGeneratedImage(generatedImageURL);
-    }, 10000);
+    const filteredImageURL = response.data.data[0];
+    setFilteredImage(filteredImageURL);
   };
 
   return (
@@ -56,18 +46,18 @@ const DalleImageGenerator = () => {
       <input type="file" onChange={handleImageUpload} />
       {image && (
         <div>
-          <h2>Input Image:</h2>
-          <img src={image} alt="input" />
+          <h2>Original Image:</h2>
+          <img src={image} alt="original" />
         </div>
       )}
-      {generatedImage && (
+      {filteredImage && (
         <div>
-          <h2>Generated Image:</h2>
-          <img src={generatedImage} alt="generated" />
+          <h2>Filtered Image:</h2>
+          <img src={filteredImage} alt="filtered" />
         </div>
       )}
     </div>
   );
 };
 
-export default DalleImageGenerator;
+export default ImageEditor;
