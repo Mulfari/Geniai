@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer'
 import './App.css';
 import ChatComponent from './components/Chat';
+import DalleImageGenerator from './components/Cargar';
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
@@ -31,6 +32,7 @@ const App = () => {
       {newImage && <NewImage />}
       {modifyImage && <ModifyImageForm />}
       <ChatComponent />
+      <DalleImageGenerator />
       <Footer />
     </div>
   );
