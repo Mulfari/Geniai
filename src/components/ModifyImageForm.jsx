@@ -14,8 +14,6 @@ const ImageDescriptionForm = () => {
       reader.onerror = (error) => reject(error);
     });
 
-  const clarifaiApiKey = "a270745c80654ce085dc1b12c1415227";
-
   const onSubmit = async (event) => {
     event.preventDefault();
     if (!image) return;
@@ -24,7 +22,7 @@ const ImageDescriptionForm = () => {
     const clarifaiResponse = await axios.post(
       "https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs",
       { inputs: [{ data: { image: { base64: base64Image.split("base64,")[1] } } }] },
-      { headers: { Authorization: `Key ${clarifaiApiKey}` } }
+      { headers: { Authorization: `Key ${process.env.CLARIFAI_API_KEY}` } }
     );
 
     const descriptions = clarifaiResponse.data.outputs[0].data.concepts.map(
