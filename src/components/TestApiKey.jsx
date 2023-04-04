@@ -3,6 +3,7 @@ import axios from 'axios';
 
 const TestApiKey = () => {
   const APIKEY = process.env.REACT_APP_OPENAI_API_KEY
+  console.log('API key:', APIKEY);
   const [engines, setEngines] = useState([]);
   const [error, setError] = useState(null);
 
