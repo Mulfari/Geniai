@@ -48,7 +48,7 @@ const ChatComponent = () => {
           onChange={(e) => setInputMessage(e.target.value)}
           placeholder="Escribe tu mensaje aquí"
         />
-        <button onClick={handleSendMessage}>Enviar</button>
+        <button onClick={handleSendMessage}>Enviar2</button>
       </div>
     </div>
   );
