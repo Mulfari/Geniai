@@ -57,7 +57,7 @@ const NewImage = () => {
           {
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'Bearer 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',
+              'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
             },
           }
         );
