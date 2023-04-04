@@ -11,6 +11,7 @@ const NewImage = () => {
   
   const generateImage = async () => {
     setLoading(true);
+    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
     try {
       const response = await axios.post(
@@ -25,7 +26,7 @@ const NewImage = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer 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`,
+            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
           },     
         }
       );
