@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles.css/Chat.css';
+import './styles.css/ChatComponent.css';
 
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
@@ -10,14 +10,9 @@ const ChatComponent = () => {
     setMessages([...messages, { role: 'user', content: inputMessage }]);
 
     const data = {
-      'engine': 'davinci-codex',
-      'messages': messages.concat({ role: 'user', content: inputMessage }).map((msg) => ({
-        role: msg.role,
-        content: msg.content,
-      })),
+      'messages': messages.concat({ role: 'user', content: inputMessage }),
       'max_tokens': 50,
     };
-    
 
     try {
       const response = await axios.post('https://api.openai.com/v1/chat/completions', data, {
