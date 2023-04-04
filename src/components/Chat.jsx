@@ -14,7 +14,7 @@ const ChatComponent = () => {
       }, {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         }
       });
       setChatLog(prevState => [...prevState, { user: message, ai: response.data.choices[0].text }]);
