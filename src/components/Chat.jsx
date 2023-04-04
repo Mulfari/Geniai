@@ -15,20 +15,14 @@ const ChatComponent = () => {
     };
 
     try {
-      const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-        prompt: `chat: ${JSON.stringify(data.messages)}`,
-        max_tokens: data.max_tokens,
-        n: 1,
-        stop: null,
-        temperature: 1,
-      }, {
+      const response = await axios.post('https://api.openai.com/v1/chat/completions', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         },
       });
 
-      const aiMessage = response.data.choices[0].text;
+      const aiMessage = response.data.choices[0].message.content;
       setMessages([...messages, { role: 'user', content: inputMessage }, { role: 'ai', content: aiMessage }]);
     } catch (error) {
       console.error('Error calling OpenAI API:', error);
