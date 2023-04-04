@@ -10,7 +10,7 @@ const TestApiKey = () => {
       const result = await axios.get('https://api.openai.com/v1/engines', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer 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`,
+          'Authorization': `Bearer sk-`,
         },
       });
 
