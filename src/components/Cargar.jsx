@@ -23,11 +23,10 @@ const DalleImageGenerator = () => {
 
   const generateImage = async (base64Image) => {
     const response = await axios.post(
-      "https://api.openai.com/v1/images/generations",
+      "https://api.openai.com/v1/images/create",
       {
         model: "image-alpha-001",
-        prompt: `Generate an image similar to the input image.\nImage:\n[data:image/jpeg;base64,${base64Image.split("base64,")[1]}]`,
-        num_images: 1,
+        data: `image/jpeg;base64,${base64Image.split("base64,")[1]}`,
         size: "512x512",
       },
       {
@@ -37,8 +36,19 @@ const DalleImageGenerator = () => {
         },
       }
     );
-    const generatedImageURL = response.data.data[0].url;
-    setGeneratedImage(generatedImageURL);
+    const jobId = response.data.id;
+    setTimeout(async () => {
+      const resultResponse = await axios.get(
+        `https://api.openai.com/v1/images/${jobId}`,
+        {
+          headers: {
+            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+          },
+        }
+      );
+      const generatedImageURL = resultResponse.data.data.url;
+      setGeneratedImage(generatedImageURL);
+    }, 10000);
   };
 
   return (
