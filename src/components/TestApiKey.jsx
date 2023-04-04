@@ -2,39 +2,38 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const TestApiKey = () => {
-  const [response, setResponse] = useState('');
+  const [engines, setEngines] = useState([]);
+  const [error, setError] = useState(null);
 
-  const testAPIKey = async () => {
-    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-
-    const data = {
-      'prompt': 'Translate the following English text to French: "Hello, how are you?"',
-      'max_tokens': 30,
-    };
-
+  const getEngines = async () => {
     try {
-      const result = await axios.post('https://api.openai.com/v1/engines/davinci-codex/completions', data, {
+      const result = await axios.get('https://api.openai.com/v1/engines', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
+          'Authorization': `Bearer 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`,
         },
       });
 
-      setResponse(result.data.choices[0].text);
+      setEngines(result.data.data);
+      setError(null);
     } catch (error) {
       console.error('Error calling OpenAI API:', error);
-      setResponse('Error al probar la API key. Verifica la consola para más detalles.');
+      setError('Error al obtener la lista de motores. Verifica la consola para más detalles.');
     }
   };
-
   return (
     <div>
-      <h2>Test API Key Component</h2>
-      <button onClick={testAPIKey}>Probar API key</button>
-      {response && (
+      <h2>List Engines Component</h2>
+      <button onClick={getEngines}>Obtener lista de motores</button>
+      {error && <p>{error}</p>}
+      {engines.length > 0 && (
         <div>
-          <h3>Respuesta:</h3>
-          <p>{response}</p>
+          <h3>Motores disponibles:</h3>
+          <ul>
+            {engines.map((engine) => (
+              <li key={engine.id}>{engine.id}</li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
