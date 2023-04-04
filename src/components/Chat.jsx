@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './styles.css/Chat.css';
 
 const ChatComponent = () => {
   const [message, setMessage] = useState("");
@@ -27,17 +28,18 @@ const ChatComponent = () => {
   };
 
   return (
-    <div>
-      <div>
+    <div className="chat-container">
+      <div className="chat-box">
         {chatLog.map((log, index) => (
-          <div key={index}>
-            <div>{log.user}</div>
-            <div>{log.ai}</div>
+          <div key={index} className={`chat-message ${log.user === "User" ? "user" : "ai"}`}>
+            {log.user}: {log.ai}
           </div>
         ))}
       </div>
-      <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
-      <button onClick={sendMessage}>Send</button>
+      <div className="chat-input">
+        <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+        <button onClick={sendMessage}>Send</button>
+      </div>
     </div>
   );
 };
