@@ -1,44 +1,48 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 
 const VoiceToText = () => {
-  const [audioFile, setAudioFile] = useState(null);
   const [transcription, setTranscription] = useState("");
 
-  const handleAudioChange = (event) => {
-    setAudioFile(event.target.files[0]);
-  };
+  useEffect(() => {
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Web Speech API is not supported on this browser");
+    } else {
+      const recognition = new window.webkitSpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+      recognition.onresult = (event) => {
+        const result = event.results[0][0].transcript;
+        setTranscription(result);
+      };
 
-    if (!audioFile) return;
+      recognition.onerror = (event) => {
+        alert(`Error occurred in recognition: ${event.error}`);
+      };
 
-    const formData = new FormData();
-    formData.append("audio", audioFile);
+      recognition.onend = () => {
+        recognition.stop();
+      };
 
-    const response = await axios.post(
-      "https://api.openai.com/v1/audio-to-text",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-        },
-      }
-    );
+      const startTranscription = () => {
+        recognition.start();
+      };
 
-    setTranscription(response.data.text);
-  };
+      const stopTranscription = () => {
+        recognition.stop();
+      };
+
+      return () => {
+        recognition.stop();
+      };
+    }
+  }, []);
 
   return (
     <div>
-      <h2>Voz a Texto</h2>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="audio-file">Seleccionar archivo de audio:</label>
-        <input type="file" id="audio-file" onChange={handleAudioChange} />
-        <button type="submit">Transcribir</button>
-      </form>
+      <button onClick={startTranscription}>Start Recording</button>
+      <button onClick={stopTranscription}>Stop Recording</button>
       <p>{transcription}</p>
     </div>
   );
