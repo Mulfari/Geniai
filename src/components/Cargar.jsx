@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-const ImageEditor = () => {
+const DalleImageGenerator = () => {
   const [image, setImage] = useState(null);
-  const [filteredImage, setFilteredImage] = useState(null);
+  const [generatedImage, setGeneratedImage] = useState(null);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     const base64Image = await convertToBase64(file);
     setImage(base64Image);
-    applyFilter(base64Image);
+    generateImage(base64Image);
   };
 
   const convertToBase64 = (file) => {
@@ -21,24 +21,24 @@ const ImageEditor = () => {
     });
   };
 
-  const applyFilter = async (base64Image) => {
+  const generateImage = async (base64Image) => {
     const response = await axios.post(
       "https://api.openai.com/v1/images/create",
       {
-        prompt: "Apply a cool filter to this image:",
-        images: [base64Image.split("base64,")[1]],
-        size: [512, 512],
-        response_format: "url",
+        "model": "image-alpha-001",
+        "image": `data:image/jpeg;base64,${base64Image.split("base64,")[1]}`,
+        "size": "512x512",
+        "response_format": "url"
       },
       {
         headers: {
           "Content-Type": "application/json",
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+          "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
         },
       }
     );
-    const filteredImageURL = response.data.data[0];
-    setFilteredImage(filteredImageURL);
+    const generatedImageURL = response.data.data.url;
+    setGeneratedImage(generatedImageURL);
   };
 
   return (
@@ -46,18 +46,18 @@ const ImageEditor = () => {
       <input type="file" onChange={handleImageUpload} />
       {image && (
         <div>
-          <h2>Original Image:</h2>
-          <img src={image} alt="original" />
+          <h2>Input Image:</h2>
+          <img src={image} alt="input" />
         </div>
       )}
-      {filteredImage && (
+      {generatedImage && (
         <div>
-          <h2>Filtered Image:</h2>
-          <img src={filteredImage} alt="filtered" />
+          <h2>Generated Image:</h2>
+          <img src={generatedImage} alt="generated" />
         </div>
       )}
     </div>
   );
 };
 
-export default ImageEditor;
+export default DalleImageGenerator;
