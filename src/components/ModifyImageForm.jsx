@@ -37,12 +37,14 @@ const ImageDescriptionForm = () => {
 
   return (
     <div className="image-description-form">
-      <form onSubmit={onSubmit}>
-        <input type="file" onChange={onImageChange} />
-        <button type="submit">Obtener descripción</button>
+    <h2 className="image-description-header">Modificar imagen</h2>
+    <form onSubmit={onSubmit}>
+    <input className="image-description-input" type="file" onChange={onImageChange} />
+    <button className="image-description-button" type="submit">Obtener descripción</button>
       </form>
-      <p>{description}</p>
+    <p>{description}</p>
     </div>
+
   );
 };
 
