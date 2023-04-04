@@ -7,9 +7,11 @@ const ChatComponent = () => {
 
   const sendMessage = async () => {
     try {
-      const response = await axios.post("https://api.openai.com/v1/chat/completions", {
+      const response = await axios.post("https://api.openai.com/v1/engines/davinci/completions", {
         prompt: `User: ${message}\nAI:`,
-        max_tokens: 50,
+        max_tokens: 100,
+        n: 1,
+        stop: "\n",
         temperature: 0.5
       }, {
         headers: {
