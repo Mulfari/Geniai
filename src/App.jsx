@@ -5,7 +5,6 @@ import HomePage from './components/HomePage';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer'
 import './App.css';
-import TestApiKey from './components/TestApiKey';
 import ChatComponent from './components/Chat';
 
 const App = () => {
@@ -32,7 +31,6 @@ const App = () => {
       {newImage && <NewImage />}
       {modifyImage && <ModifyImageForm />}
       <ChatComponent />
-      <TestApiKey />
       <Footer />
     </div>
   );
