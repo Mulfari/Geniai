@@ -3,14 +3,23 @@ import React, { useState, useEffect } from "react";
 const VoiceToText = () => {
   const [transcription, setTranscription] = useState("");
 
+  const recognition = new window.webkitSpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  const startTranscription = () => {
+    recognition.start();
+  };
+
+  const stopTranscription = () => {
+    recognition.stop();
+  };
+
   useEffect(() => {
     if (!("webkitSpeechRecognition" in window)) {
       alert("Web Speech API is not supported on this browser");
     } else {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.lang = "en-US";
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
 
       recognition.onresult = (event) => {
         const result = event.results[0][0].transcript;
@@ -22,14 +31,6 @@ const VoiceToText = () => {
       };
 
       recognition.onend = () => {
-        recognition.stop();
-      };
-
-      const startTranscription = () => {
-        recognition.start();
-      };
-
-      const stopTranscription = () => {
         recognition.stop();
       };
 
