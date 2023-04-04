@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer'
 import './App.css';
 import ChatComponent from './components/Chat';
-import VoiceToText from './components/voz';
+import VoiceToText from './components/Voz';
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
