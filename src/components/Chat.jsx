@@ -11,9 +11,13 @@ const ChatComponent = () => {
 
     const data = {
       'engine': 'davinci-codex',
-      'messages': messages.concat({ role: 'user', content: inputMessage }),
+      'messages': messages.concat({ role: 'user', content: inputMessage }).map((msg) => ({
+        role: msg.role,
+        content: msg.content,
+      })),
       'max_tokens': 50,
     };
+    
 
     try {
       const response = await axios.post('https://api.openai.com/v1/chat/completions', data, {
