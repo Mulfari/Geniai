@@ -6,6 +6,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer'
 import './App.css';
 import TestApiKey from './components/TestApiKey';
+import ChatComponent from './components/Chat';
+import Gpt3Chat from './components/Gpt3Chat'
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
@@ -31,6 +33,8 @@ const App = () => {
       {newImage && <NewImage />}
       {modifyImage && <ModifyImageForm />}
       <TestApiKey />
+      <Gpt3Chat />
+      <ChatComponent />
       <Footer />
     </div>
   );
