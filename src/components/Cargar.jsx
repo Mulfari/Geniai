@@ -1,63 +1,73 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
+import axios from 'axios';
 
-const DalleImageGenerator = () => {
-  const [image, setImage] = useState(null);
+const ImageComponent = () => {
+  const [selectedFile, setSelectedFile] = useState(null);
   const [generatedImage, setGeneratedImage] = useState(null);
 
-  const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    const base64Image = await convertToBase64(file);
-    setImage(base64Image);
-    generateImage(base64Image);
+  const fileSelectedHandler = (event) => {
+    setSelectedFile(event.target.files[0]);
   };
 
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  const uploadImage = async () => {
+    if (!selectedFile) {
+      alert('Selecciona una imagen antes de continuar.');
+      return;
+    }
 
-  const generateImage = async (base64Image) => {
-    const response = await axios.post(
-      "https://api.openai.com/v1/images/create",
-      {
-        "model": "image-alpha-001",
-        "image": `data:image/jpeg;base64,${base64Image.split("base64,")[1]}`,
-        "size": "512x512",
-        "response_format": "url"
-      },
-      {
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+
+    try {
+      const response = await axios.post('https://api.openai.com/v1/images/uploads', formData, {
         headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         },
-      }
-    );
-    const generatedImageURL = response.data.data.url;
-    setGeneratedImage(generatedImageURL);
+      });
+
+      const imageURL = response.data.url;
+      generateSimilarImage(imageURL);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+
+  const generateSimilarImage = async (imageURL) => {
+    const data = {
+      'model': 'image-alpha-001',
+      'prompt': `Create an image similar to ${imageURL}`,
+      'num_images': 1,
+      'size': '512x512',
+    };
+
+    try {
+      const response = await axios.post('https://api.openai.com/v1/images/generations', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+        },
+      });
+
+      const generatedImageURL = response.data.data[0].url;
+      setGeneratedImage(generatedImageURL);
+    } catch (error) {
+      console.error('Error generating similar image:', error);
+    }
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleImageUpload} />
-      {image && (
-        <div>
-          <h2>Input Image:</h2>
-          <img src={image} alt="input" />
-        </div>
-      )}
+    <div className="image-container">
+      <input type="file" onChange={fileSelectedHandler} />
+      <button onClick={uploadImage}>Generar imagen similar</button>
       {generatedImage && (
-        <div>
-          <h2>Generated Image:</h2>
-          <img src={generatedImage} alt="generated" />
-        </div>
+        <>
+          <h3>Imagen generada:</h3>
+          <img src={generatedImage} alt="Generated" className="generated-image" />
+        </>
       )}
     </div>
   );
 };
 
-export default DalleImageGenerator;
+export default ImageComponent;
