@@ -2,58 +2,36 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const ChatComponent = () => {
-  const [messages, setMessages] = useState([]);
-  const [inputMessage, setInputMessage] = useState('');
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
 
-  const handleSendMessage = async () => {
-    setMessages([...messages, { role: 'user', content: inputMessage }]);
-
-    const data = {
-      "prompt": inputMessage,
-      "temperature": 0.7,
-      "max_tokens": 60,
-      "top_p": 1,
-      "frequency_penalty": 0,
-      "presence_penalty": 0
-    };
-
+  const sendMessage = async () => {
     try {
-      const response = await axios.post('https://api.openai.com/v1/engine/turing/completions/531ccfb7-8359-4d8f-80c3-2f84b667938f', data, {
+      const { data } = await axios.post('https://api.openai.com/v1/engine/<ENGINE_ID>/completions', {
+        prompt: message,
+        max_tokens: 50,
+        temperature: 0.5,
+        n: 1,
+        stop: "\n"
+      }, {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-        },
+          'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
       });
-
-      const aiMessage = response.data.choices[0].text;
-      setMessages([...messages, { role: 'ai', content: aiMessage }]);
+      setResponse(data.choices[0].text);
     } catch (error) {
-      console.error('Error calling OpenAI API:', error);
+      console.log(error);
     }
-
-    setInputMessage('');
-  };
+  }
 
   return (
     <div>
-      <div>
-        {messages.map((message, index) => (
-          <div key={index} className={`chat-message ${message.role}`}>
-            {message.content}
-          </div>
-        ))}
-      </div>
-      <div>
-        <input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          placeholder="Type your message here"
-        />
-        <button onClick={handleSendMessage}>Send</button>
-      </div>
+      <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} />
+      <button onClick={sendMessage}>Send</button>
+      <p>{response}</p>
     </div>
   );
-};
+}
 
 export default ChatComponent;
