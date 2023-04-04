@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles.css/Chat.css';
 
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
@@ -10,21 +9,24 @@ const ChatComponent = () => {
     setMessages([...messages, { role: 'user', content: inputMessage }]);
 
     const data = {
-      'model': 'text-davinci-002',
-      'messages': messages.concat({ role: 'user', content: inputMessage }),
-      'max_tokens': 50,
+      "prompt": inputMessage,
+      "temperature": 0.7,
+      "max_tokens": 60,
+      "top_p": 1,
+      "frequency_penalty": 0,
+      "presence_penalty": 0
     };
 
     try {
-      const response = await axios.post('https://api.openai.com/v1/chat/completions', data, {
+      const response = await axios.post('https://api.openai.com/v1/engine/turing/completions/531ccfb7-8359-4d8f-80c3-2f84b667938f', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
         },
       });
 
-      const aiMessage = response.data.choices[0].message.content;
-      setMessages([...messages, { role: 'user', content: inputMessage }, { role: 'ai', content: aiMessage }]);
+      const aiMessage = response.data.choices[0].text;
+      setMessages([...messages, { role: 'ai', content: aiMessage }]);
     } catch (error) {
       console.error('Error calling OpenAI API:', error);
     }
@@ -33,22 +35,22 @@ const ChatComponent = () => {
   };
 
   return (
-    <div className="chat-container">
-      <div className="chat-box">
+    <div>
+      <div>
         {messages.map((message, index) => (
           <div key={index} className={`chat-message ${message.role}`}>
             {message.content}
           </div>
         ))}
       </div>
-      <div className="chat-input">
+      <div>
         <input
           type="text"
           value={inputMessage}
           onChange={(e) => setInputMessage(e.target.value)}
-          placeholder="Escribe tu mensaje aquí"
+          placeholder="Type your message here"
         />
-        <button onClick={handleSendMessage}>Enviar2</button>
+        <button onClick={handleSendMessage}>Send</button>
       </div>
     </div>
   );
