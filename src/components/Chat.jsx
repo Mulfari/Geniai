@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './styles.css/ChatComponent.css';
+import './ChatComponent.css';
 
 const ChatComponent = () => {
   const [messages, setMessages] = useState([]);
@@ -10,6 +10,7 @@ const ChatComponent = () => {
     setMessages([...messages, { role: 'user', content: inputMessage }]);
 
     const data = {
+      'model': 'text-davinci-002',
       'messages': messages.concat({ role: 'user', content: inputMessage }),
       'max_tokens': 50,
     };
