@@ -11,7 +11,6 @@ const NewImage = () => {
   
   const generateImage = async () => {
     setLoading(true);
-    const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
     try {
       const response = await axios.post(
