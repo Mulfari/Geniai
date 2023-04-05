@@ -28,7 +28,7 @@ const ImageComponent = () => {
   const generateSimilarImage = async (imageURL) => {
     const data = {
       'model': 'image-alpha-001',
-      'prompt': `Create an image similar to ${imageURL}`,
+      'prompt': `Create an image similar to ${imageURL}, but with a blue sky and a mountain in the background`,
       'num_images': 1,
       'size': '512x512',
     };
