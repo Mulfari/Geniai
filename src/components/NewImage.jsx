@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
-import { uploadImage, downloadImage } from '../firebase/firebaseStorage';
+import { uploadImage, downloadImage } from '../FirebaseStorage';
 
 const NewImage = () => {
   const [description, setDescription] = useState('');
