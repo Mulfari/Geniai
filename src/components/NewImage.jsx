@@ -71,6 +71,20 @@ const NewImage = () => {
     setLoading(false);
   };
 
+  const downloadImage = async () => {
+    try {
+      const response = await axios.get(imageSrc, { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'imagen-generada.jpg');
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  };
+
   return (
     <div className="new-image-container">
       <h1>Generador de imágenes con DALL-E 2</h1>
@@ -94,6 +108,13 @@ const NewImage = () => {
           <img src={imageSrc} alt="Imagen generada" />
         </div>
       )}
+      {imageSrc && (
+  <div>
+    <h2>Imagen generada:</h2>
+    <img src={imageSrc} alt="Imagen generada" />
+    <button onClick={downloadImage}>Descargar imagen</button>
+  </div>
+)}
       {additionalImages.length > 0 && (
         <div>
                     <h2>Imágenes similares:</h2>
