@@ -18,39 +18,32 @@ const ImageEdit = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!image || !prompt) {
-      alert('Por favor, selecciona una imagen y escribe un texto.');
+    if (!image) {
+      alert('Por favor, selecciona una imagen.');
       return;
     }
 
-    const imageToBase64 = (file) =>
-      new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = (error) => reject(error);
-      });
+    if (!prompt) {
+      alert('Por favor, escribe un prompt.');
+      return;
+    }
 
-    const base64Image = await imageToBase64(image);
-    const strippedBase64Image = base64Image.replace('data:image/png;base64,', '');
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('prompt', prompt);
 
     try {
-      const response = await axios.post(
-        'https://api.openai.com/v1/images/edits',
-        {
-          image: strippedBase64Image,
-          prompt: prompt,
+      const response = await axios.post('https://api.openai.com/v1/images/edits', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+        },
+        params: {
           n: 1,
           size: '1024x1024',
           response_format: 'url',
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-          },
-        }
-      );
+      });
 
       setEditedImage(response.data.data[0].url);
     } catch (error) {
@@ -62,13 +55,7 @@ const ImageEdit = () => {
     <div>
       <form onSubmit={handleSubmit}>
         <input type="file" accept="image/png" onChange={handleImageChange} />
-        <input
-          type="text"
-          value={prompt}
-          onChange={handlePromptChange}
-          maxLength="1000"
-          placeholder="Escribe una descripción"
-        />
+        <input type="text" placeholder="Prompt" value={prompt} onChange={handlePromptChange} />
         <button type="submit">Generar imagen editada</button>
       </form>
       {editedImage && (
