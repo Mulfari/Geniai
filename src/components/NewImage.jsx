@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
-import { uploadImageToFirebase } from '../firebase/firebaseStorage';
+import { uploadImageToFirebase } from '../FirebaseStorage';
 
 
 
