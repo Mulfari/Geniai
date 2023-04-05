@@ -6,7 +6,7 @@ import ModificarImagen from './components/Modificar';
 import HomePage from './components/HomePage';
 import ChatComponent from './components/Chat';
 import Footer from './components/Footer'
-import ImageVariation from './components/prueba';
+import ImageVariation from './components/Prueba';
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
