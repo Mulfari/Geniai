@@ -32,12 +32,13 @@ const ImageEdit = () => {
       });
 
     const base64Image = await imageToBase64(image);
+    const strippedBase64Image = base64Image.replace('data:image/png;base64,', '');
 
     try {
       const response = await axios.post(
         'https://api.openai.com/v1/images/edits',
         {
-          image: base64Image,
+          image: strippedBase64Image,
           prompt: prompt,
           n: 1,
           size: '1024x1024',
