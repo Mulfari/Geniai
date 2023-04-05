@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
-import { uploadImageToFirebase } from '../FirebaseStorage';
 
 
 
@@ -38,7 +37,7 @@ const NewImage = () => {
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
   const generateSimilarImages = async () => {
     setLoading(true);
@@ -96,7 +95,6 @@ const NewImage = () => {
           <img src={imageSrc} alt="Imagen generada" />
         </div>
       )}
-      <button onClick={saveGeneratedImage}>Descargar imagen generada</button>
       {additionalImages.length > 0 && (
         <div>
                     <h2>Imágenes similares:</h2>
