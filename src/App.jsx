@@ -7,6 +7,7 @@ import HomePage from './components/HomePage';
 import ChatComponent from './components/Chat';
 import Footer from './components/Footer'
 import ImageVariation from './components/Prueba';
+import ImageEdit from './components/Prueba2';
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
@@ -33,6 +34,7 @@ const App = () => {
       {modifyImage && <ModificarImagen />}
       <ChatComponent />
       <ImageVariation />
+      <ImageEdit />
       <Footer />
     </div>
   );

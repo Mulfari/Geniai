@@ -29,7 +29,7 @@ const ImageVariation = () => {
         },
         params: {
           n: 1,
-          size: '1024x1024',
+          size: '256x256',
           response_format: 'url',
         },
       });
