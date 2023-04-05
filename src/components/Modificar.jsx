@@ -45,10 +45,10 @@ const ModificarImagen = () => {
     setImage(event.target.files[0]);
   };
 
-  const generateSimilarImage = async (imageURL) => {
+  const generateSimilarImage = async (image) => {
     const data = {
       'model': 'image-alpha-001',
-      'prompt': `Create an image similar to ${imageURL}`,
+      'prompt': `Create an image similar to ${image}`,
       'num_images': 1,
       'size': '512x512',
     };
