@@ -1,13 +1,11 @@
-import { useState } from 'react';
-import NewImage from './components/NewImage';
-import ModifyImageForm from './components/ModifyImageForm';
-import HomePage from './components/HomePage';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer'
 import './App.css';
+import { useState } from 'react';
+import Navbar from './components/Navbar';
+import NewImage from './components/NewImage';
+import ModificarImagen from './components/Modificar';
+import HomePage from './components/HomePage';
 import ChatComponent from './components/Chat';
-import DalleImageGenerator from './components/Cargar';
-import ModifyImageComponent from './components/Modificar';
+import Footer from './components/Footer'
 
 const App = () => {
   const [newImage, setNewImage] = useState(false);
@@ -31,10 +29,8 @@ const App = () => {
       <button onClick={handleNewImage}>Nueva imagen</button>
       <button onClick={handleModifyImage}>Modificar imagen</button>
       {newImage && <NewImage />}
-      {modifyImage && <ModifyImageForm />}
+      {modifyImage && <ModificarImagen />}
       <ChatComponent />
-      <ModifyImageComponent />
-      <DalleImageGenerator />
       <Footer />
     </div>
   );

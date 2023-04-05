@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { uploadImage } from "../FirebaseStorage";
-import "./styles.css/ModifyImageForm.css";
+import "./styles.css/ModificarImagen.css";
 
-const ModifyImageComponent = () => {
+const ModificarImagen = () => {
   const [image, setImage] = useState(null);
   const [description, setDescription] = useState("");
   const [generatedImage, setGeneratedImage] = useState(null);
@@ -86,4 +86,4 @@ const ModifyImageComponent = () => {
   );
 };
 
-export default ModifyImageComponent;
+export default ModificarImagen;
