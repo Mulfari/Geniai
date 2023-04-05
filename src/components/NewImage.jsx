@@ -37,9 +37,9 @@ const NewImage = () => {
     }
   };
 
-  const saveGeneratedImage = async () => {
+  const uploadGeneratedImageToFirebase = async () => {
     if (!imageSrc) {
-      alert('No hay imagen generada para guardar.');
+      alert('No hay imagen generada para subir.');
       return;
     }
 
@@ -49,9 +49,9 @@ const NewImage = () => {
 
     try {
       const downloadURL = await uploadImageToFirebase(fileName, imageBlob);
-      alert(`Imagen guardada en Firebase Storage. URL de descarga: ${downloadURL}`);
+      alert(`Imagen subida a Firebase Storage. URL de descarga: ${downloadURL}`);
     } catch (error) {
-      console.error('Error al guardar la imagen en Firebase Storage:', error);
+      console.error('Error al subir la imagen a Firebase Storage:', error);
     }
   };
 
@@ -71,7 +71,7 @@ const NewImage = () => {
         <div>
           <h2>Imagen generada:</h2>
           <img src={imageSrc} alt="Imagen generada" />
-          <button onClick={saveGeneratedImage}>Descargar imagen generada</button>
+          <button onClick={uploadGeneratedImageToFirebase}>Subir imagen a Firebase</button>
         </div>
       )}
     </div>
