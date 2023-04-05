@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { uploadImage } from './FirebaseStorage';
 
 const ImageComponent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -9,24 +10,15 @@ const ImageComponent = () => {
     setSelectedFile(event.target.files[0]);
   };
 
-  const uploadImage = async () => {
+  const handleUploadImage = async () => {
     if (!selectedFile) {
       alert('Selecciona una imagen antes de continuar.');
       return;
     }
 
-    const formData = new FormData();
-    formData.append('image', selectedFile);
-
     try {
-      const response = await axios.post('https://api.openai.com/v1/images/uploads', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-        },
-      });
-
-      const imageURL = response.data.url;
+      const imageURL = await uploadImage(selectedFile);
+      console.log('Image uploaded successfully:', imageURL);
       generateSimilarImage(imageURL);
     } catch (error) {
       console.error('Error uploading image:', error);
@@ -59,7 +51,7 @@ const ImageComponent = () => {
   return (
     <div className="image-container">
       <input type="file" onChange={fileSelectedHandler} />
-      <button onClick={uploadImage}>Generar imagen similar</button>
+      <button onClick={handleUploadImage}>Generar imagen similar</button>
       {generatedImage && (
         <>
           <h3>Imagen generada:</h3>
