@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { uploadImage } from './FirebaseStorage';
+import { uploadImage } from '../FirebaseStorage';
 
 const ImageComponent = () => {
   const [selectedFile, setSelectedFile] = useState(null);
