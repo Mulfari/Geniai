@@ -13,3 +13,10 @@ export const saveChatLog = async (chatLog) => {
   const chatLogRef = ref(storageRef, `${Date.now()}.json`);
   await uploadBytes(chatLogRef, new Blob([JSON.stringify(chatLog)], { type: 'application/json' }));
 };
+
+export const uploadImageToFirebase = async (fileName, imageBlob) => {
+  const imageRef = ref(storage, `images/${fileName}`);
+  await uploadBytes(imageRef, imageBlob);
+  const downloadURL = await getDownloadURL(imageRef);
+  return downloadURL;
+};

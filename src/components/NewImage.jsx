@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
+import { uploadImageToFirebase } from '../firebase/firebaseStorage';
+
 
 
 const NewImage = () => {
@@ -37,6 +39,25 @@ const NewImage = () => {
       setLoading(false);
     }
   };
+
+  const saveGeneratedImage = async () => {
+    if (!generatedImage) {
+      alert('No hay imagen generada para guardar.');
+      return;
+    }
+  
+    const fileName = `generated-image-${Date.now()}.png`;
+    const response = await fetch(generatedImage);
+    const imageBlob = await response.blob();
+  
+    try {
+      const downloadURL = await uploadImageToFirebase(fileName, imageBlob);
+      alert(`Imagen guardada en Firebase Storage. URL de descarga: ${downloadURL}`);
+    } catch (error) {
+      console.error('Error al guardar la imagen en Firebase Storage:', error);
+    }
+  };
+  
 
   const generateSimilarImages = async () => {
     setLoading(true);
@@ -94,6 +115,7 @@ const NewImage = () => {
           <img src={imageSrc} alt="Imagen generada" />
         </div>
       )}
+      <button onClick={saveGeneratedImage}>Descargar imagen generada</button>
       {additionalImages.length > 0 && (
         <div>
                     <h2>Imágenes similares:</h2>
