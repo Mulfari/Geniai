@@ -43,8 +43,10 @@ const NewImage = () => {
       return;
     }
 
+    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+    const corsFreeUrl = corsProxy + imageSrc;
     const fileName = `generated-image-${Date.now()}.png`;
-    const response = await fetch(imageSrc);
+    const response = await fetch(corsFreeUrl);
     const imageBlob = await response.blob();
 
     try {
