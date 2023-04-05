@@ -48,7 +48,7 @@ const ModificarImagen = () => {
   const generateSimilarImage = async (imageURL) => {
     const data = {
       'model': 'image-alpha-001',
-      'prompt': `Create an image similar to ${imageURL}, but with a blue sky and a mountain in the background`,
+      'prompt': `Create an image similar to ${imageURL}`,
       'num_images': 1,
       'size': '512x512',
     };
