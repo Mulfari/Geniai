@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './styles.css/NewImage.css';
-import { uploadImage, downloadImage } from '../FirebaseStorage';
+
 
 const NewImage = () => {
   const [description, setDescription] = useState('');
   const [imageSrc, setImageSrc] = useState(null);
   const [additionalImages, setAdditionalImages] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  
   const generateImage = async () => {
     setLoading(true);
 
@@ -26,7 +26,7 @@ const NewImage = () => {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
-          },
+          },     
         }
       );
 
@@ -71,18 +71,17 @@ const NewImage = () => {
     setLoading(false);
   };
 
-  const handleDownloadImage = async () => {
+  const downloadImage = async () => {
     try {
-      setLoading(true);
-      const imageName = 'imagen-generada.jpg';
       const response = await axios.get(imageSrc, { responseType: 'blob' });
-      const imageBlob = new Blob([response.data], { type: 'image/jpeg' });
-      const imageUrl = await uploadImage(imageBlob, imageName);
-      window.open(await downloadImage(imageName), '_blank');
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'imagen-generada.jpg');
+      document.body.appendChild(link);
+      link.click();
     } catch (error) {
       console.error('Error downloading image:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -110,36 +109,15 @@ const NewImage = () => {
         </div>
       )}
       {imageSrc && (
-        <div>
-          <h2>Imagen generada:</h2>
-          <img src={imageSrc} alt="Imagen generada" />
-          <button
-            onClick={async () => {
-              setLoading(true);
-              try {
-                const imageName = 'imagen-generada.jpg';
-                const imageUrl = await uploadImage(imageSrc, imageName);
-                await saveChatLog({
-                  type: 'image',
-                  message: imageUrl,
-                  timestamp: new Date().getTime(),
-                });
-                window.open(await downloadImage(imageName), '_blank');
-              } catch (error) {
-                console.error('Error downloading image:', error);
-              } finally {
-                setLoading(false);
-              }
-            }}
-            disabled={loading}
-          >
-            {loading ? 'Descargando...' : 'Descargar imagen'}
-          </button>
-        </div>
-      )}
+  <div>
+    <h2>Imagen generada:</h2>
+    <img src={imageSrc} alt="Imagen generada" />
+    <button onClick={downloadImage}>Descargar imagen</button>
+  </div>
+)}
       {additionalImages.length > 0 && (
         <div>
-          <h2>Imágenes similares:</h2>
+                    <h2>Imágenes similares:</h2>
           {additionalImages.map((src, index) => (
             <img key={index} src={src} alt={`Imagen similar ${index + 1}`} />
           ))}
