@@ -38,27 +38,7 @@ const NewImage = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const saveGeneratedImage = async () => {
-    if (!imageSrc) {
-      alert('No hay imagen generada para guardar.');
-      return;
-    }
-  
-    const fileName = `generated-image-${Date.now()}.png`;
-    const response = await fetch(imageSrc);
-    const imageBlob = await response.blob();
-  
-    try {
-      const downloadURL = await uploadImageToFirebase(fileName, imageBlob);
-      alert(`Imagen guardada en Firebase Storage. URL de descarga: ${downloadURL}`);
-    } catch (error) {
-      console.error('Error al guardar la imagen en Firebase Storage:', error);
-    }
-  };
-  
-  
+  }; 
 
   const generateSimilarImages = async () => {
     setLoading(true);
