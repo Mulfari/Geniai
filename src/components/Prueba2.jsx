@@ -1,42 +1,28 @@
-// ImageEdit.js
+// ImageVariation.js
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const ImageEdit = () => {
+const ImageVariation = () => {
   const [image, setImage] = useState(null);
-  const [mask, setMask] = useState(null);
-  const [prompt, setPrompt] = useState('');
-  const [editedImage, setEditedImage] = useState(null);
+  const [generatedImage, setGeneratedImage] = useState(null);
 
-  const handleImageChange = (e) => {
+  const handleChange = (e) => {
     setImage(e.target.files[0]);
-  };
-
-  const handleMaskChange = (e) => {
-    setMask(e.target.files[0]);
-  };
-
-  const handlePromptChange = (e) => {
-    setPrompt(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!image || !prompt) {
-      alert('Por favor, selecciona una imagen y escribe un texto.');
+    if (!image) {
+      alert('Por favor, selecciona una imagen.');
       return;
     }
 
     const formData = new FormData();
     formData.append('image', image);
-    if (mask) {
-      formData.append('mask', mask);
-    }
-    formData.append('prompt', prompt);
 
     try {
-      const response = await axios.post('https://api.openai.com/v1/images/edits', formData, {
+      const response = await axios.post('https://api.openai.com/v1/images/variations', formData, {
         headers: {
           'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
           'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
@@ -48,28 +34,26 @@ const ImageEdit = () => {
         },
       });
 
-      setEditedImage(response.data.data[0].url);
+      setGeneratedImage(response.data.data[0].url);
     } catch (error) {
-      console.error('Error al editar la imagen:', error);
+      console.error('Error al generar la imagen:', error);
     }
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input type="file" accept="image/png" onChange={handleImageChange} />
-        <input type="file" accept="image/png" onChange={handleMaskChange} />
-        <input type="text" value={prompt} onChange={handlePromptChange} maxLength={1000} />
-        <button type="submit">Editar imagen</button>
+        <input type="file" accept="image/png" onChange={handleChange} />
+        <button type="submit">Generar variación de imagen</button>
       </form>
-      {editedImage && (
+      {generatedImage && (
         <div>
-          <h2>Imagen editada:</h2>
-          <img src={editedImage} alt="Imagen editada" />
+          <h2>Imagen generada:</h2>
+          <img src={generatedImage} alt="Imagen generada" />
         </div>
       )}
     </div>
   );
 };
 
-export default ImageEdit;
+export default ImageVariation;
