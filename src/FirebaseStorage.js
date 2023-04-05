@@ -1,4 +1,4 @@
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, getDownloadURL } from 'firebase/storage';
 import { storage } from '../firebase/firebaseConfig';
 
 export const uploadImage = async (file) => {
@@ -12,4 +12,10 @@ export const saveChatLog = async (chatLog) => {
   const storageRef = ref(storage, 'chat-logs');
   const chatLogRef = ref(storageRef, `${Date.now()}.json`);
   await uploadBytes(chatLogRef, new Blob([JSON.stringify(chatLog)], { type: 'application/json' }));
+};
+
+export const downloadImage = async (imageName) => {
+  const storageRef = ref(storage, `images/${imageName}`);
+  const downloadURL = await getDownloadURL(storageRef);
+  return downloadURL;
 };
